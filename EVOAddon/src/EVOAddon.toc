@@ -1,0 +1,43 @@
+## Interface: 60100
+## Title: EVOAddon
+## Notes: Does nothing
+## Author: eldono
+## Version: 6.1.${build.number}
+## SavedVariables: EVOAddon
+## OptionalDeps: Ace3
+## X-Category: Inventory
+## X-Email: sellloot@blackperl.ca
+## X-Website: http://www.wowace.com/addons/sellloot/
+
+# Ace Libraries
+Ace3\LibStub\LibStub.lua
+Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Ace3\AceAddon-3.0\AceAddon-3.0.xml
+Ace3\AceEvent-3.0\AceEvent-3.0.xml
+Ace3\AceTimer-3.0\AceTimer-3.0.xml
+Ace3\AceBucket-3.0\AceBucket-3.0.xml
+Ace3\AceHook-3.0\AceHook-3.0.xml
+Ace3\AceDB-3.0\AceDB-3.0.xml
+Ace3\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Ace3\AceLocale-3.0\AceLocale-3.0.xml
+Ace3\AceConsole-3.0\AceConsole-3.0.xml
+Ace3\AceGUI-3.0\AceGUI-3.0.xml
+Ace3\AceConfig-3.0\AceConfig-3.0.xml
+Ace3\AceComm-3.0\AceComm-3.0.xml
+Ace3\AceTab-3.0\AceTab-3.0.xml
+Ace3\AceSerializer-3.0\AceSerializer-3.0.xml
+
+Ace3\Ace3.lua
+
+# Libraries
+
+embeds.xml
+
+# Language mappings
+Locales\Locales.xml
+
+# UI methods
+
+
+# FrameXML 
+EVOAddon.xml

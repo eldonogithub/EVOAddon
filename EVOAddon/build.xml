@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant"
+         name="EVOAddon"
+         default="deploy"
+         basedir=".">
+    <description>
+            description
+    </description>
+
+    <property file="build.properties">
+    </property>
+    <property file="release.properties">
+    </property>
+
+    <property name="dst.path" value="${wow.addons}/${ant.project.name}" />
+    <property name="build.dir" value="${basedir}/build" />
+    <property name="zip.file" value="${ant.project.name}.zip" />
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <fileset id="src" dir="${basedir}/src">
+    </fileset>
+
+    <fileset id="dst" dir="${dst.path}">
+    </fileset>
+
+    <fileset id="build" dir="${build.dir}/${ant.project.name}">
+    </fileset>
+
+    <target name="clean">
+        <echo>Deleting ${dst.path}...</echo>
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset refid="dst" />
+        </delete>
+    </target>
+
+    <target name="deploy" depends="clean,package" description="Deploy addon to local WoW directory">
+        <echo>${user.dir}</echo>
+        <echo>${wow.addons}</echo>
+        <copy todir="${dst.path}" verbose="true">
+            <fileset refid="build" />
+        </copy>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: package.clean                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="package.clean">
+        <delete dir="${build.dir}/${ant.project.name}" failonerror="false" />
+        <delete file="${build.dir}/${zip.file}" failonerror="false" />
+    </target>
+
+    <!-- ================================= 
+          target: package              
+         ================================= -->
+    <target name="package"
+            depends="package.clean"
+            description="Create a zip file of the addon">
+        <buildnumber file="mybuild.number" />
+
+        <echo>Packaging Version ${build.number}</echo>
+        <copy todir="${build.dir}/${ant.project.name}">
+            <fileset refid="src" />
+            <filterchain>
+                <expandproperties />
+            </filterchain>
+        </copy>
+
+        <zip destfile="${build.dir}/${zip.file}">
+            <fileset dir="${build.dir}">
+                <include name="${ant.project.name}/**" />
+            </fileset>
+        </zip>
+
+    </target>
+
+    <path id="ivy.lib.path">
+        <fileset dir="${basedir}/lib" includes="*.jar" />
+    </path>
+
+    <taskdef resource="org/apache/ivy/ant/antlib.xml"
+             uri="antlib:org.apache.ivy.ant"
+             classpathref="ivy.lib.path" />
+
+
+    <!-- ================================= 
+          target: resolve              
+         ================================= -->
+    <target name="resolve" depends="depends" description="download jars">
+        <ivy:retrieve pattern="${ant.home}/lib/[artifact]-[revision]-[type].[ext]"
+                      type="jar">
+            <dependency org="javax.mail" name="mail" rev="1.4.5" />
+        </ivy:retrieve>
+    </target>
+
+    <!-- ================================= 
+          target: Email              
+         ================================= -->
+    <target name="Email" depends="deploy" description="Send email of a release">
+        <propertyfile file="release.properties"
+                      description="This property file stores the most recent release version"
+                      comment="Last version released">
+            <entry key="release.version" value="${build.number}"/>
+        </propertyfile>
+        <mail subject="${ant.project.name} - Build ${build.number}"
+              from="Eldon Olmstead &lt;eldono@ns.sympatico.ca&gt;"
+              tolist="eldono@ns.sympatico.ca,paulhun@gmail.com"
+              mailhost="smtp1.ns.sympatico.ca"
+              mailport="25">
+            <message>Hi Paul, 
+
+Newest version of ${ant.project.name} - version ${build.number}
+
+
+            </message>
+            <attachments>
+                <fileset dir="${build.dir}">
+                    <include name="**/*.zip" />
+                </fileset>
+            </attachments>
+        </mail>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="depends">
+    </target>
+
+</project>
